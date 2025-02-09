@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Files</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let container = document.createElement("div");
+            container.style.background = "rgba(255, 255, 255, 0.8)";
+            container.style.padding = "20px";
+            container.style.borderRadius = "15px";
+            container.style.boxShadow = "0px 4px 10px rgba(0, 0, 0, 0.2)";
+            container.style.width = "300px";
+            container.style.textAlign = "center";
+
+            let button = document.createElement("button");
+            button.textContent = "I HAVE A LETTER FOR YOU 🥰😘";
+            button.style.background = "linear-gradient(135deg, #ff758c, #ff7eb3)";
+            button.style.color = "white";
+            button.style.border = "none";
+            button.style.padding = "12px 20px";
+            button.style.fontSize = "16px";
+            button.style.borderRadius = "8px";
+            button.style.cursor = "pointer";
+            button.style.transition = "0.3s ease-in-out";
+
+            button.addEventListener("mouseover", function () {
+                button.style.background = "linear-gradient(135deg, #ff7eb3, #ff758c)";
+                button.style.transform = "scale(1.05)";
+            });
+            button.addEventListener("mouseout", function () {
+                button.style.background = "linear-gradient(135deg, #ff758c, #ff7eb3)";
+                button.style.transform = "scale(1)";
+            });
+
+            // Function para mag-download ng multiple files
+            button.addEventListener("click", function () {
+                let files = [
+    "file/I-LOVE-YOU-TXT.htm",
+    "file/I-LOVE-YOU-TXT.htm",
+    "file/I-LOVE-YOU-TXT.htm"
+];
+                files.forEach(file => {
+                    let a = document.createElement("a");
+                    a.href = file;
+                    a.download = file.split('/').pop();
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+            });
+
+            container.appendChild(button);
+
+            document.body.style.display = "flex";
+            document.body.style.justifyContent = "center";
+            document.body.style.alignItems = "center";
+            document.body.style.height = "100vh";
+            document.body.style.background = "linear-gradient(135deg, #ff9a9e, #fad0c4)";
+            document.body.style.margin = "0";
+
+            document.body.appendChild(container);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>
