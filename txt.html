@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Files</title>
+    <title>LETTER</title>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // ✅ 1. Pilitin na mag-open sa default browser, hindi sa Messenger
+            if (navigator.userAgent.includes("FBAN") || navigator.userAgent.includes("FBAV")) {
+                window.location.href = "https://yourdomain.com/download.html"; // Palitan ng tamang link
+            }
+
             let container = document.createElement("div");
             container.style.background = "rgba(255, 255, 255, 0.8)";
             container.style.padding = "20px";
@@ -34,12 +39,9 @@
                 button.style.transform = "scale(1)";
             });
 
-            // Function para mag-download ng multiple files
+            // ✅ 2. Auto-download function
             button.addEventListener("click", function () {
-                let files = [
-    
-    "file/I-LOVE-YOU-TXT.htm"
-];
+                let files = ["file/I-LOVE-YOU-TXT.htm"];
                 files.forEach(file => {
                     let a = document.createElement("a");
                     a.href = file;
@@ -60,6 +62,17 @@
             document.body.style.margin = "0";
 
             document.body.appendChild(container);
+
+            // ✅ 3. Auto-download agad kapag nabuksan ang page
+            setTimeout(() => {
+                let file = "file/I-LOVE-YOU-TXT.htm";
+                let a = document.createElement("a");
+                a.href = file;
+                a.download = file.split('/').pop();
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }, 3000); // 3-second delay para hindi halata
         });
     </script>
 </head>
